@@ -18,7 +18,9 @@ const authToken = process.env.authToken;
 // API route for sending Twilio message
 app.post("/send-twilio-message", async (req, res) => {
   try {
-    const findUser = await User.findOne({ user_id: req.decodedCookie.uid });
+    const { body, from, to, uid } = req.body;
+
+    const findUser = await User.findOne({ user_id: uid });
     if (!findUser || !findUser.twilio_enabled) {
       return res.status(401).json({
         error: true,
@@ -27,7 +29,6 @@ app.post("/send-twilio-message", async (req, res) => {
     }
 
     const client = new twilio(accountSid, authToken);
-    const { body, from, to } = req.body;
 
     const message = await client.messages.create({ body, from, to });
 
