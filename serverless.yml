@@ -1,0 +1,22 @@
+service: twilio-api-implementation
+#frameworkVersion: '3'
+provider:
+  name: aws
+  runtime: nodejs16.x
+  timeout: 30
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - http:
+          path: /send-conversations
+          method: POST
+          cors:
+            origin: "*" # <-- Specify allowed origin
+            headers: "*"
+      
